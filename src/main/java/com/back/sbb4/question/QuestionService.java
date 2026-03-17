@@ -1,6 +1,8 @@
 package com.back.sbb4.question;
 
 import com.back.sbb4.DataNotFoundException;
+import com.back.sbb4.user.SiteUser;
+import com.back.sbb4.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -18,6 +20,7 @@ import java.util.Optional;
 public class QuestionService {
 
     private final QuestionRepository questionRepository;
+    private final UserService userService;
 
     public Page<Question> getList(int page) {
         List<Sort.Order> sorts = new ArrayList<>();
@@ -32,11 +35,12 @@ public class QuestionService {
         else throw new DataNotFoundException("question not found");
     }
 
-    public void create(String subject, String content) {
+    public void create(String subject, String content, SiteUser user) {
         Question q = new Question();
         q.setSubject(subject);
         q.setContent(content);
         q.setCreateDate(LocalDateTime.now());
+        q.setAuthor(user);
         this.questionRepository.save(q);
     }
 }
